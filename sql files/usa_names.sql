@@ -83,15 +83,45 @@ WHERE name LIKE 'Q%' AND name NOT LIKE 'Qu%';
 -- I come up with 46 distinct names meeting this criteria.
 
 -- 13. Which is the more popular spelling between "Stephen" and "Steven"? Use a single query to answer this question.
-SELECT COUNT(name = 'Stephen') AS stephen, COUNT(name = 'Steven') AS steven
-FROM names;
-What percentage of names are "unisex" - that is what percentage of names have been used both for boys and for girls?
+SELECT name, SUM(num_registered) AS registrations
+FROM names
+WHERE name = 'Stephen' OR name = 'Steven'
+GROUP BY name
+ORDER BY SUM(num_registered) DESC;
+-- I show Steven is more popular with 1,286,951 registrations vs. 860,972 for Stephen.
 
-How many names have made an appearance in every single year since 1880?
+-- 14. What percentage of names are "unisex" - that is what percentage of names have been used both for boys and for girls?
+SELECT name, COUNT(gender) AS unisex_name
+FROM names
+GROUP BY name
+HAVING COUNT(DISTINCT(gender)) = 2
+-- 10773/1,957,046 = .0055
 
-How many names have only appeared in one year?
+-- 15. How many names have made an appearance in every single year since 1880?
+SELECT COUNT(DISTINCT(name)) AS appear_all_years
+FROM names
+WHERE year BETWEEN 1880 AND 2018;
 
-How many names only appeared in the 1950s?
+
+-- 16. How many names have only appeared in one year?
+SELECT name, COUNT(name) AS only_one_year
+FROM names
+GROUP BY name
+HAVING COUNT(year) = 1; 
+-- I'm coming up with 21,100 names.
+
+-- 17/ How many names only appeared in the 1950s?
+SELECT COUNT(DISTINCT(name)) AS name_1950
+FROM names
+WHERE year BETWEEN 1950 AND 1959; 
+-- I show 17,007 names appeared only in the 1950's.
+
+-- 18. How many names made their first appearance in the 2010s?
+
+-- 19. Find the names that have not be used in the longest.
+
+-- 20. Come up with a question that you would like to answer using this dataset. Then write a query to answer this question.
+
 
 How many names made their first appearance in the 2010s?
 
